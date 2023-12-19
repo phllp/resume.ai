@@ -21,17 +21,17 @@ export default function Home() {
 
             {/* <Separator className="h-6" orientation="vertical" /> */}
 
-            <Button variant={"outline"}>
-              <Github className="w-4 h-4 mr-2" />
+            <Button variant={"outline"} className="mx-2">
+              <Github className="w-4 h-4" />
             </Button>
           </div>
         </div>
       </section>
 
       {/* upload area */}
-      <section className="flex flex-col grow items-center justify-center py-8">
+      <section className="flex flex-col  items-center justify-center py-10">
         {/* <h2>Faça o upload de um arquivo</h2> */}
-        <div className="items-center justify-center">
+        <div className="items-center justify-center w-80">
           <VideoInputForm></VideoInputForm>
         </div>
       </section>

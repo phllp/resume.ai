@@ -130,10 +130,6 @@ export function VideoInputForm() {
       <Button type="submit" className="text-md">
         Carregar Vídeo <Upload className="ml-4 w-4 h-4" />
       </Button>
-
-      <button type="submit" className="border-2">
-        Carregar
-      </button>
     </form>
   );
 }
