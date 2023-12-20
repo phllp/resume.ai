@@ -81,11 +81,20 @@ export function VideoInputForm() {
         method: "POST",
         body: data,
       });
+
       if (!res.ok) {
         setStatus("error");
         throw new Error(await res.text());
       } else {
-        console.log(res);
+        const jsonData = await res.json();
+
+        const transcriptionData = new FormData();
+        transcriptionData.set("videoId", jsonData.videoId);
+
+        const transcriptionRes = await fetch("/api/transcription", {
+          method: "POST",
+          body: transcriptionData,
+        });
         setStatus("success");
       }
     } catch (e: any) {

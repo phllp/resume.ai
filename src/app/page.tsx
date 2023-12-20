@@ -7,6 +7,16 @@ import axios from "axios";
 import { Github } from "lucide-react";
 
 export default function Home() {
+  const handleTranscription = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+
+    const res = await fetch("/api/transcription", {
+      method: "POST",
+    });
+  };
+
   return (
     <main className="flex min-h-screen flex-col  ">
       {/* header */}
@@ -21,7 +31,11 @@ export default function Home() {
 
             {/* <Separator className="h-6" orientation="vertical" /> */}
 
-            <Button variant={"outline"} className="mx-2">
+            <Button
+              variant={"outline"}
+              className="mx-2"
+              onClick={handleTranscription}
+            >
               <Github className="w-4 h-4" />
             </Button>
           </div>

@@ -44,7 +44,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   });
 
   return NextResponse.json(
-    { success: true, path: video.path },
+    { success: true, videoId: video.id },
     { status: 200 }
   );
 }
