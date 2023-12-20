@@ -3,18 +3,53 @@ import { fetchFile } from "@ffmpeg/util";
 import { FileVideo, Upload } from "lucide-react";
 import { ChangeEvent, FormEvent, useMemo, useState } from "react";
 import { Button } from "./ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Label } from "@radix-ui/react-label";
+import { Badge } from "@/components/ui/badge";
 
 type Status =
   | "waiting"
   | "converting"
+  | "transcribing"
   | "uploading"
   | "generating"
   | "success"
   | "error";
 
-export function VideoInputForm() {
+const statusBadge = (status: Status) => {
+  switch (status) {
+    case "waiting":
+      return "bg-primary ";
+    case "converting":
+      return "bg-yellow-600  animate-pulse";
+    case "transcribing":
+      return "bg-blue-600  animate-pulse";
+    case "uploading":
+      return "bg-primary  animate-pulse";
+    case "generating":
+      return "bg-primary  animate-pulse";
+    case "success":
+      return "bg-green-600 ";
+    case "error":
+      return "bg-red-600 ";
+    default:
+      return "bg-primary ";
+  }
+};
+
+type VideoUploadProps = {
+  setVideoId: (id: string) => void;
+  setTranscription: (transcription: string) => void;
+};
+
+export function VideoInputForm({
+  setVideoId,
+  setTranscription,
+}: VideoUploadProps) {
   const [videoFile, setVideoFile] = useState<File>();
   const [status, setStatus] = useState<Status>("waiting");
+  useState<Status>("waiting");
+  const [convertProgress, setConvertProgress] = useState<number>(0);
 
   const handleFileSelected = (e: ChangeEvent<HTMLInputElement>) => {
     const { files } = e.currentTarget;
@@ -26,13 +61,11 @@ export function VideoInputForm() {
   };
 
   const convertVideoToAudio = async (video: File) => {
-    console.log("converting audio to video");
-
     const ffMpeg = await getFFmpeg();
     await ffMpeg.writeFile("input.mp4", await fetchFile(video));
 
     ffMpeg.on("progress", (progress) => {
-      console.log("Convert progress: " + Math.round(progress.progress * 100));
+      setConvertProgress(progress.progress * 100);
     });
 
     ffMpeg.exec([
@@ -54,7 +87,6 @@ export function VideoInputForm() {
     const audioFile = new File([audioFileBlob], "audio.mp3", {
       type: "audio/mpeg",
     });
-    console.log(`conversion finished, audio file size: ${audioFile.size}`);
 
     return audioFile;
   };
@@ -87,15 +119,38 @@ export function VideoInputForm() {
         throw new Error(await res.text());
       } else {
         const jsonData = await res.json();
+        setVideoId(jsonData.videoId);
+        setConvertProgress(0);
+        await handleTranscription(jsonData.videoId);
+      }
+    } catch (e: any) {
+      setStatus("error");
+      console.error(e);
+    }
+  };
 
-        const transcriptionData = new FormData();
-        transcriptionData.set("videoId", jsonData.videoId);
+  const handleTranscription = async (videoId: string) => {
+    console.log("transcribing video");
+    console.log(`video id: ${videoId}`);
+    setStatus("transcribing");
+    // const theme = themeRef.current?.value;
+    try {
+      const data = new FormData();
+      data.set("videoId", videoId as string);
 
-        const transcriptionRes = await fetch("/api/transcription", {
-          method: "POST",
-          body: transcriptionData,
-        });
+      const res = await fetch("/api/transcription", {
+        method: "POST",
+        body: data,
+      });
+
+      if (res.ok) {
+        const jsonData = await res.json();
+
+        setTranscription(jsonData.transcription);
         setStatus("success");
+      } else {
+        setStatus("error");
+        throw new Error(await res.text());
       }
     } catch (e: any) {
       setStatus("error");
@@ -109,7 +164,7 @@ export function VideoInputForm() {
   }, [videoFile]);
 
   return (
-    <form action="" onSubmit={handleVideoUpload} className="space-y-6">
+    <form action="" onSubmit={handleVideoUpload} className="m-2">
       <label
         htmlFor="video"
         className="relative flex border rounded-md aspect-video cursor-pointer border-dashed text-sm flex-col gap-2 items-center justify-center text-muted-foreground hover:bg-primary/5"
@@ -122,7 +177,7 @@ export function VideoInputForm() {
           ></video>
         ) : (
           <>
-            Carregar vídeo
+            Selecionar vídeo
             <FileVideo className="w-4 h-4"></FileVideo>
           </>
         )}
@@ -132,13 +187,25 @@ export function VideoInputForm() {
         type="file"
         id="video"
         accept="video/mp4"
-        className="sr-only"
+        className="sr-only aspect-video input-file"
         onChange={handleFileSelected}
       />
-
-      <Button type="submit" className="text-md">
+      <Button type="submit" className="mt-2">
         Carregar Vídeo <Upload className="ml-4 w-4 h-4" />
       </Button>
+
+      <Badge className={`ml-4 text-white  ${statusBadge(status)} `}>
+        {status}
+      </Badge>
+
+      {status === "converting" && (
+        <div className="my-2">
+          <Label htmlFor="progress" className="text-sm ">
+            convertendo...
+          </Label>
+          <Progress className="h-2" id="progress" value={convertProgress} />
+        </div>
+      )}
     </form>
   );
 }
