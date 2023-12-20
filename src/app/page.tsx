@@ -103,20 +103,19 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       {/* header */}
       <section className="flex items-start">
-        <div className="px-6 py-3 flex items-center  border-b min-w-full bg-primary">
-          <h1 className="text-xl font-bold text-white">resume.me</h1>
+        <div className="px-6 py-3 flex justify-between  border-b min-w-full bg-primary">
+          <div className="flex items-center justify-center ">
+            <h1 className="text-xl font-bold text-white">resume.me</h1>
 
-          <div className="flex items-center ml-4">
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground ml-4">
               Crie resumos consisos sobre vídeos e obtenha insights relevantes.
             </span>
-
-            {/* <Separator className="h-6" orientation="vertical" /> */}
-
+          </div>
+          <a href="https://github.com/phllp/resume.me" target="_blank">
             <Button variant={"outline"} className="mx-2">
               <Github className="w-4 h-4" />
             </Button>
-          </div>
+          </a>
         </div>
       </section>
       <main className="flex-1  flex gap-6">
@@ -143,9 +142,9 @@ export default function Home() {
                 />
               </div>
 
-              <Button className="my-4 h-10" onClick={handleTranscription}>
+              {/* <Button className="my-4 h-10" onClick={handleTranscription}>
                 Gerar Resumo
-              </Button>
+              </Button> */}
             </div>
           </section>
         </aside>
@@ -155,7 +154,7 @@ export default function Home() {
           <Card className="shadow-lg w-full h-fit">
             <CardHeader>
               <CardTitle> Transcrição </CardTitle>
-              <CardDescription>A trancrição literal do vídeo.</CardDescription>
+              <CardDescription>A transcrição literal do vídeo</CardDescription>
             </CardHeader>
 
             <CardContent>
@@ -193,7 +192,7 @@ export default function Home() {
               <CardHeader>
                 <CardTitle> Resumo </CardTitle>
                 <CardDescription>
-                  O resumo em si, com os pontos mais importantes do vídeo.
+                  O resumo em si, com os pontos mais importantes do vídeo
                 </CardDescription>
               </CardHeader>
 
