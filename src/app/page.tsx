@@ -111,7 +111,7 @@ export default function Home() {
               Crie resumos consisos sobre vídeos e obtenha insights relevantes.
             </span>
           </div>
-          <a href="https://github.com/phllp/resume.me" target="_blank">
+          <a href="https://github.com/phllp/resume.ai" target="_blank">
             <Button variant={"outline"} className="mx-2">
               <Github className="w-4 h-4" />
             </Button>
