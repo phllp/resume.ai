@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "resume.me",
-  description: "Create resumes from videos in seconds",
+  title: "resume.ai",
+  description: "Summarize videos in seconds",
 };
 
 export default function RootLayout({

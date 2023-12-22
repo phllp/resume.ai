@@ -105,7 +105,7 @@ export default function Home() {
       <section className="flex items-start">
         <div className="px-6 py-3 flex justify-between  border-b min-w-full bg-primary">
           <div className="flex items-center justify-center ">
-            <h1 className="text-xl font-bold text-white">resume.me</h1>
+            <h1 className="text-xl font-bold text-white">resume.ai</h1>
 
             <span className="text-sm text-muted-foreground ml-4">
               Crie resumos consisos sobre vídeos e obtenha insights relevantes.
