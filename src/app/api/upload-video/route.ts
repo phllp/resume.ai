@@ -1,9 +1,5 @@
-import { prisma } from "@/lib/prisma";
-import path from "node:path";
-import { writeFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
-
-import process from "process";
+import { UploadVideoUseCaseImpl } from "@/usecases/upload-video/usecase";
 
 export async function POST(req: NextRequest, res: NextResponse) {
   const data = await req.formData();
@@ -14,37 +10,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
   }
 
-  const extension = path.extname(file.name);
-  const timestampAtual = new Date().getTime().toString();
-  const fileBasename = path.basename(file.name, extension);
-  const fileUploadName = `${fileBasename}-${timestampAtual}${extension}`;
+  try {
+    const uploadVideoUseCase = new UploadVideoUseCaseImpl();
+    const video = await uploadVideoUseCase.execute(file);
 
-  const rootDir = process.cwd();
-
-  const uploadDestination = path.resolve(rootDir, "temp", fileUploadName);
-
-  if (extension != ".mp3") {
     return NextResponse.json(
-      { error: "Invalid input type, please upload a MP3" },
-      { status: 400 }
+      { success: true, videoId: video.id },
+      { status: 200 }
     );
+  } catch (error: any) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
-
-  const bytes = await file.arrayBuffer();
-  const buffer = Buffer.from(bytes);
-
-  await writeFile(uploadDestination, buffer);
-  console.log(`open ${uploadDestination} to see the uploaded file`);
-
-  const video = await prisma.video.create({
-    data: {
-      name: fileUploadName,
-      path: uploadDestination,
-    },
-  });
-
-  return NextResponse.json(
-    { success: true, videoId: video.id },
-    { status: 200 }
-  );
 }
