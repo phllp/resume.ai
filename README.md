@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# resume.ai
 
-## Getting Started
+The idea behind this app is to transcript videos and to generate a brief summary on them.
 
-First, run the development server:
+In order to achieve that, the OpenAI API and it's AI models were used.
+
+## Requirements
+
+- NodeJS
+- pnpm (or similar)
+- Docker
+
+## Project Setup
+
+First, clone the repository and navigate to the folder:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/phllp/resume.ai.git
+cd resume.ai
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then install all the dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm i
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Make sure that the database is running and the migrations are applied.
 
-## Learn More
+**Important:** Make sure that the database URL is correct inside the **.env** file
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+docker compose up -d
+npx prisma migrate dev
+npm prisma generate
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Now setup your OpenAI API key, just replace the default value in the **.env** file
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```bash
+docker compose up -d
+npx prisma migrate dev
+npm prisma generate
+```
 
-## Deploy on Vercel
+Your good to go now, just start the development server and all should be working just fine.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm i
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Tutorial
+
+A quick explanation on the app usage:
+
+1. Upload a video by clicking on the Video Select component and selecting a video from your computer
+2. (Optional) On the "Whats the video's theme?" text input, you can provide aditional context, to improve the AI model performance
+3. Click on "Load Video", and that's all.
