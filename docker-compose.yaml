@@ -9,7 +9,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     environment:
-      - POSTGRES_DB=hackathon-niara
+      - POSTGRES_DB=resumeai
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
     ports:
